@@ -1,0 +1,743 @@
+:root {
+  --bg-gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  --card-bg: rgba(255, 255, 255, 0.06);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --text: #f0f0f5;
+  --text-dim: #a0a0b5;
+  --accent: #6366f1;
+  --accent-glow: rgba(99, 102, 241, 0.4);
+  --p1: #22d3ee;
+  --p2: #f59e0b;
+  --p3: #10b981;
+  --p4: #ec4899;
+  --tank: #3b82f6;
+  --healer: #10b981;
+  --dps: #ef4444;
+  --danger: #ef4444;
+  --success: #10b981;
+  --radius: 16px;
+  --radius-sm: 10px;
+  /* Apple: spring timing */
+  --spring: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Apple: system font with optical sizing */
+body {
+  font-family: -apple-system, "SF Pro Display", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  font-optical-sizing: auto;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+  /* Apple: comfortable leading for body */
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/bg.jpg') center/cover no-repeat;
+  opacity: 0.3;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ===== Header — Apple: tight tracking for display text ===== */
+header {
+  text-align: center;
+  padding: 24px 0 32px;
+}
+header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  /* Apple: negative tracking for large display text */
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.subtitle {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-top: 8px;
+  letter-spacing: 0;
+}
+
+/* ===== Cards — Apple: translucent material layers ===== */
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin: 0 auto 20px;
+  box-shadow: var(--card-shadow);
+  /* Apple: smooth transition for interactive cards */
+  transition: transform 0.2s var(--spring), box-shadow 0.2s var(--spring);
+}
+.card h2, .card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ===== Dungeon Selector ===== */
+.dungeon-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.dungeon-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 150ms ease-out, background 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+/* Apple: respond on pointer-down, not release */
+.dungeon-btn:active {
+  transform: scale(0.97);
+  transition: transform 50ms ease-out;
+}
+.dungeon-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent);
+}
+.dungeon-btn.active {
+  background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
+  border-color: transparent;
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+.dungeon-btn small {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.8;
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+/* Slot summary — centered */
+.slot-summary {
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+.slot-summary .role-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  margin-right: 6px;
+  font-size: 0.8rem;
+  letter-spacing: 0.01em;
+}
+.slot-summary .role-tag.tank { background: rgba(59, 130, 246, 0.8); color: #fff; }
+.slot-summary .role-tag.healer { background: rgba(16, 185, 129, 0.8); color: #fff; }
+.slot-summary .role-tag.dps { background: rgba(239, 68, 68, 0.8); color: #fff; }
+
+/* ===== Random Section ===== */
+.random-section {
+  text-align: center;
+}
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.result-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+.result-card .player-name {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
+.result-card .role-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+}
+.result-card .role-badge.tank { background: rgba(59, 130, 246, 0.8); color: #fff; }
+.result-card .role-badge.healer { background: rgba(16, 185, 129, 0.8); color: #fff; }
+.result-card .role-badge.dps { background: rgba(239, 68, 68, 0.8); color: #fff; }
+.result-card .job-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  min-height: 1.5em;
+  letter-spacing: -0.02em;
+}
+.result-card.p1 { border-color: var(--p1); }
+.result-card.p2 { border-color: var(--p2); }
+.result-card.p3 { border-color: var(--p3); }
+.result-card.p4 { border-color: var(--p4); }
+.result-card.p1 .job-name { color: var(--p1); }
+.result-card.p2 .job-name { color: var(--p2); }
+.result-card.p3 .job-name { color: var(--p3); }
+.result-card.p4 .job-name { color: var(--p4); }
+
+/* Apple: instant button feedback */
+.btn-random {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  border: none;
+  border-radius: 14px;
+  padding: 18px 50px;
+  cursor: pointer;
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+  box-shadow: 0 6px 30px rgba(99, 102, 241, 0.4);
+  letter-spacing: -0.01em;
+}
+/* Apple: respond on press, not release */
+.btn-random:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 15px rgba(99, 102, 241, 0.3);
+  transition: transform 50ms ease-out;
+}
+.btn-random:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 40px rgba(99, 102, 241, 0.5);
+}
+.btn-random:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.message {
+  margin-top: 14px;
+  min-height: 1.2em;
+  font-size: 0.95rem;
+}
+.message.error { color: var(--danger); }
+.message.success { color: var(--success); }
+
+/* Apple: toast message animation */
+.message.msg-enter {
+  animation: msgSlideIn 0.2s var(--spring) forwards;
+}
+.message.msg-exit {
+  animation: msgSlideOut 0.15s ease-in forwards;
+}
+@keyframes msgSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes msgSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* ===== History ===== */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.section-header h2 { margin: 0; }
+.history-list { list-style: none; }
+.history-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  transition: background 0.15s var(--spring);
+}
+/* Apple: history item enter animation */
+.history-list li.history-enter {
+  animation: historySlideIn 0.25s var(--spring) forwards;
+}
+@keyframes historySlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.history-list li:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.history-list li.empty-tip { justify-content: center; color: var(--text-dim); }
+.history-list .time { color: var(--text-dim); font-size: 0.8rem; min-width: 140px; }
+.history-list .dungeon-tag {
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(139, 92, 246, 0.2);
+  color: #a78bfa;
+}
+.history-list .results { flex: 1; font-size: 0.85rem; }
+.history-list .del {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-dim);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: transform 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+}
+.history-list .del:active { transform: scale(0.95); }
+.history-list .del:hover { color: var(--danger); border-color: var(--danger); }
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: opacity 0.15s;
+}
+.btn-link:hover { text-decoration: underline; }
+
+/* ===== Settings ===== */
+.section-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  padding: 4px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: -0.01em;
+}
+.chevron { transition: transform 0.2s var(--spring); }
+.section-toggle[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+
+/* Apple: accordion animation for settings（高度由 JS 精确测量驱动，内容再长也不会被裁剪） */
+.settings-body {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.35s var(--spring), opacity 0.25s var(--spring);
+}
+.settings-body.open {
+  opacity: 1;
+}
+
+.hidden { display: none !important; }
+hr { border: none; border-top: 1px solid var(--card-border); margin: 20px 0; }
+.hint { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 12px; }
+.hint-inline { color: var(--text-dim); font-size: 0.85rem; white-space: nowrap; }
+
+.form-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.form-row input, .form-row select {
+  flex: 1;
+  min-width: 100px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  transition: border-color 0.15s var(--spring), box-shadow 0.15s var(--spring);
+}
+.form-row input:focus, .form-row select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+.form-row input[type="number"] { max-width: 80px; }
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: transform 150ms ease-out, background 150ms ease-out, border-color 150ms ease-out;
+}
+.btn-secondary:active { transform: scale(0.97); }
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--accent);
+}
+
+/* ===== Player Management ===== */
+.player-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+.player-row input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+}
+.player-row button {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-dim);
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: transform 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+}
+.player-row button:active { transform: scale(0.95); }
+.player-row .save:hover { color: var(--accent); border-color: var(--accent); }
+.player-row .del:hover { color: var(--danger); border-color: var(--danger); }
+
+/* ===== Exclusion Rules ===== */
+.player-excl {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.player-excl h4 { margin: 0 0 10px; font-size: 0.95rem; }
+.excl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+.excl-grid label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  transition: background 0.15s var(--spring);
+}
+.excl-grid label:hover { background: rgba(255, 255, 255, 0.06); }
+.excl-grid label:active { transform: scale(0.98); }
+.excl-grid input[type="checkbox"] { accent-color: var(--accent); }
+
+/* 职能checkbox集中在顶部 */
+.excl-groups-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--card-border);
+}
+/* 方案A：职能复选框标签 白色粗体 */
+.excl-group-label {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* 职业按组分区 */
+.excl-jobs-area {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+.excl-job-group {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.excl-job-group-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+.excl-job-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+/* ===== Linkage Rules ===== */
+.linkage-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+.linkage-row.disabled { opacity: 0.5; }
+.linkage-row .desc { flex: 1; }
+.linkage-row .desc b { color: var(--accent); }
+.linkage-row .desc .arrow { color: var(--text-dim); margin: 0 4px; }
+.linkage-row .del-link {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-dim);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: transform 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+}
+.linkage-row .del-link:active { transform: scale(0.95); }
+.linkage-row .del-link:hover { color: var(--danger); border-color: var(--danger); }
+
+/* ===== Job Management ===== */
+.job-group { margin-bottom: 16px; }
+.job-group h4 { font-size: 0.9rem; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
+.job-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+.job-row.disabled { opacity: 0.5; }
+.job-row .toggle {
+  width: 40px; height: 22px;
+  background: var(--card-border); border-radius: 11px; border: none;
+  position: relative; cursor: pointer; flex-shrink: 0;
+  transition: background 0.2s var(--spring);
+}
+.job-row .toggle::after {
+  content: ""; position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; background: #fff; border-radius: 50%;
+  transition: left 0.2s var(--spring-bounce);
+}
+.job-row .toggle.on { background: var(--success); }
+.job-row .toggle.on::after { left: 20px; }
+.job-row input, .job-row select {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.88rem;
+}
+.job-row button {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-dim);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: transform 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+}
+.job-row button:active { transform: scale(0.95); }
+.job-row .save:hover { color: var(--accent); border-color: var(--accent); }
+.job-row .del:hover { color: var(--danger); border-color: var(--danger); }
+
+/* ===== Dungeon Management ===== */
+.dungeon-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+.dungeon-row input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+}
+.dungeon-row input.name { flex: 1; }
+.dungeon-row input[type="number"] { width: 60px; text-align: center; }
+.dungeon-row label { font-size: 0.8rem; color: var(--text-dim); }
+.dungeon-row button {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-dim);
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: transform 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+}
+.dungeon-row button:active { transform: scale(0.95); }
+.dungeon-row .save:hover { color: var(--accent); border-color: var(--accent); }
+.dungeon-row .del:hover { color: var(--danger); border-color: var(--danger); }
+
+footer {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  padding: 20px 0;
+}
+
+/* ===== Apple: spring pop animation ===== */
+@keyframes pop {
+  0% { transform: scale(0.92); opacity: 0.5; }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.pop { animation: pop 0.35s var(--spring-bounce); }
+
+/* ===== Apple: reduced motion support ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .pop { animation: none; }
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 600px) {
+  .app { padding: 10px; max-width: 100%; }
+  header { padding: 10px 0 16px; }
+  header h1 { font-size: 1.4rem; }
+  .subtitle { font-size: 0.85rem; }
+
+  .card { padding: 16px; margin-bottom: 12px; }
+  .card h2, .card h3 { font-size: 1rem; margin-bottom: 10px; }
+
+  .dungeon-buttons { flex-direction: column; gap: 8px; }
+  .dungeon-btn { min-width: 100%; padding: 12px 16px; font-size: 0.95rem; }
+
+  .slot-summary { padding: 10px 12px; font-size: 0.8rem; }
+  .slot-summary .role-tag { padding: 2px 6px; font-size: 0.7rem; }
+
+  .results-grid { grid-template-columns: 1fr; gap: 10px; }
+  .result-card { padding: 12px; }
+  .result-card .job-name { font-size: 1.2rem; }
+  .result-card .role-badge { font-size: 0.7rem; padding: 2px 6px; }
+
+  .btn-random { font-size: 1.1rem; padding: 14px 30px; width: 100%; }
+
+  .history-list li { flex-wrap: wrap; gap: 6px; padding: 10px; }
+  .history-list .time { min-width: 100%; font-size: 0.75rem; }
+  .history-list .dungeon-tag { font-size: 0.7rem; }
+  .history-list .results { font-size: 0.8rem; }
+  .history-list .del { font-size: 0.75rem; padding: 3px 8px; }
+
+  .section-toggle { font-size: 0.95rem; }
+
+  .excl-groups-top { gap: 8px 12px; }
+  .excl-jobs-area { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .excl-job-group { padding: 8px 10px; }
+  .excl-job-group label { font-size: 0.82rem; padding: 3px 0; }
+
+  .linkage-row { flex-wrap: wrap; padding: 8px 10px; font-size: 0.82rem; }
+  .linkage-row .desc { min-width: 100%; margin-bottom: 4px; }
+  .linkage-row .desc b { font-size: 0.82rem; }
+
+  .form-row { flex-direction: column; gap: 6px; }
+  .form-row input, .form-row select { min-width: 100%; width: 100%; padding: 10px; font-size: 0.9rem; }
+  .form-row input[type="number"] { max-width: 100%; }
+  .btn-secondary { width: 100%; padding: 10px; text-align: center; }
+  .hint, .hint-inline { font-size: 0.8rem; }
+
+  .player-row { flex-wrap: wrap; gap: 6px; }
+  .player-row input { min-width: 100%; }
+  .player-row button { flex: 1; text-align: center; }
+
+  .job-row { flex-wrap: wrap; gap: 6px; }
+  .job-row input, .job-row select { min-width: 100%; }
+  .job-row .toggle { width: 36px; height: 20px; }
+  .job-row .toggle::after { width: 16px; height: 16px; }
+  .job-row .toggle.on::after { left: 18px; }
+  .job-row .save, .job-row .del { flex: 1; text-align: center; }
+
+  .dungeon-row { flex-wrap: wrap; gap: 6px; }
+  .dungeon-row input.name { min-width: 100%; }
+  .dungeon-row input[type="number"] { flex: 1; min-width: 60px; }
+  .dungeon-row button { flex: 1; text-align: center; }
+}

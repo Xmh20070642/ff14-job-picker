@@ -1,0 +1,17 @@
+{
+  "name": "ff14-job-picker",
+  "version": "2.0.0",
+  "description": "FF14 职业随机选择器 — 副本职能配置、排除规则、联动规则、防重复抽取，支持局域网跨设备访问",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "express": "^4.19.2"
+  }
+}

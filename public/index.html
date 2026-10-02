@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FF14今天玩什么？</title>
+  <link rel="stylesheet" href="style.css?v=17" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>🎲 FF14今天玩什么？</h1>
+      <p class="subtitle">选择副本 · 随机分配职业 · 支持自定义规则</p>
+    </header>
+
+    <!-- 副本选择 -->
+    <section class="card">
+      <h2>🗡️ 选择副本类型</h2>
+      <div id="dungeon-buttons" class="dungeon-buttons"></div>
+      <div class="slot-summary" id="slot-summary"></div>
+    </section>
+
+    <!-- 随机区 -->
+    <section class="card random-section">
+      <h2>🎯 随机结果</h2>
+      <div id="results-container" class="results-grid"></div>
+      <button id="random-btn" class="btn-random">🎲 随机生成</button>
+      <div id="message" class="message"></div>
+    </section>
+
+    <!-- 历史 -->
+    <section class="card">
+      <div class="section-header">
+        <h2>📜 历史记录</h2>
+        <button id="clear-history" class="btn-link">清空全部</button>
+      </div>
+      <ul id="history-list" class="history-list">
+        <li class="empty-tip">暂无记录</li>
+      </ul>
+    </section>
+
+    <!-- 设置 -->
+    <section class="card">
+      <button id="toggle-settings" class="section-toggle">
+        ⚙️ 设置（玩家 / 排除规则 / 职业 / 副本）
+        <span class="chevron">▾</span>
+      </button>
+      <div id="settings-body" class="settings-body">
+        <h3>👥 玩家管理</h3>
+        <p class="hint">可临时添加或删除玩家。实际随机人数 = 玩家数。</p>
+        <div id="players-manage"></div>
+        <div class="form-row">
+          <input type="text" id="new-player-name" placeholder="新玩家名" />
+          <button id="add-player" class="btn-secondary">添加玩家</button>
+        </div>
+        <hr />
+
+        <h3>🚫 排除规则</h3>
+        <p class="hint">勾选 = 将该职能/职业排除出随机池。</p>
+        <div id="exclusions-area"></div>
+        <hr />
+
+        <h3>🛠️ 职业管理</h3>
+        <div id="jobs-manage"></div>
+        <div class="form-row">
+          <input type="text" id="new-job-name" placeholder="新职业名" />
+          <select id="new-job-group"></select>
+          <button id="add-job" class="btn-secondary">添加</button>
+        </div>
+        <hr />
+
+        <h3>🗂️ 组别管理</h3>
+        <div id="groups-manage"></div>
+        <div class="form-row">
+          <input type="text" id="new-group-name" placeholder="新组别名" />
+          <select id="new-group-role"></select>
+          <button id="add-group" class="btn-secondary">添加组别</button>
+        </div>
+        <hr />
+
+        <h3>🔗 联动规则</h3>
+        <p class="hint">基于抽取结果的动态规则：当「触发玩家」抽到「触发职能」时，自动把「目标职能」从「目标玩家」的候选池里排除。可限定仅在特定副本中生效。</p>
+        <div id="linkage-area"></div>
+        <div class="form-row">
+          <select id="link-source-player"></select>
+          <span class="hint-inline">抽到</span>
+          <select id="link-trigger-role"></select>
+          <span class="hint-inline">→</span>
+          <select id="link-target-player"></select>
+          <span class="hint-inline">排除</span>
+          <select id="link-target-role"></select>
+          <span class="hint-inline">副本</span>
+          <select id="link-dungeon"></select>
+          <button id="add-linkage" class="btn-secondary">添加</button>
+        </div>
+        <hr />
+
+        <h3>🏰 副本配置</h3>
+        <p class="hint">每种副本的职能槽位数。修改后生效。</p>
+        <div id="dungeons-manage"></div>
+        <div class="form-row">
+          <input type="text" id="new-dungeon-name" placeholder="新副本名" />
+          <input type="number" id="new-dungeon-tank" placeholder="防护" min="0" />
+          <input type="number" id="new-dungeon-healer" placeholder="治疗" min="0" />
+          <input type="number" id="new-dungeon-dps" placeholder="进攻" min="0" />
+          <button id="add-dungeon" class="btn-secondary">添加副本</button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span id="footer-status"></span>
+    </footer>
+  </div>
+  <script src="app.js?v=17"></script>
+</body>
+</html>
